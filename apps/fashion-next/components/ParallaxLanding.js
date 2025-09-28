@@ -29,6 +29,7 @@ export function ParallaxLanding({
 }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const containerRef = useRef(null);
+  const [query, setQuery] = useState("");
 
   const { scrollY } = useScroll();
 
@@ -75,6 +76,8 @@ export function ParallaxLanding({
                 onSearch={onSearch}
                 loading={loading}
                 className="max-w-4xl mx-auto"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
               />
             </div>
           </motion.div>
@@ -140,6 +143,8 @@ export function ParallaxLanding({
                   onSearch={onSearch}
                   loading={loading}
                   className="max-w-2xl mx-auto"
+                  value={query}
+                  onChange={(value) => setQuery(value)}
                 />
               </div>
             </motion.div>

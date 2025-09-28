@@ -5,30 +5,34 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, X, Loader2 } from "lucide-react";
 
-export function SearchBar({ onSearch, loading = false, className = "" }) {
-  const [query, setQuery] = useState("");
-
+export function SearchBar({
+  onSearch,
+  loading = false,
+  className = "",
+  value = "",
+  onChange = () => {},
+}) {
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (query.trim() && onSearch) {
-      onSearch(query.trim());
+    if (value.trim() && onSearch) {
+      onSearch(value.trim());
     }
   };
 
-  const handleQueryChange = (e) => {
+  const handleValueChange = (e) => {
     const value = e.target.value;
-    setQuery(value);
+    onChange(value);
   };
 
   const clearSearch = () => {
-    setQuery("");
+    onChange("");
     // Optionally clear search results when clearing the input
     if (onSearch) {
       onSearch("");
     }
   };
 
-  const hasQuery = query.trim();
+  const hasValue = value.trim();
 
   return (
     <form onSubmit={handleSubmit} className={`relative ${className}`}>
@@ -39,11 +43,11 @@ export function SearchBar({ onSearch, loading = false, className = "" }) {
           <Input
             type="text"
             placeholder="Search for fashion items... (e.g., blue shirt, red dress)"
-            value={query}
-            onChange={handleQueryChange}
+            value={value}
+            onChange={handleValueChange}
             className="pl-10 pr-10 bg-gray-100 border-gray-200 focus:bg-gray-50 focus:border-gray-300 text-black transition-all duration-200"
           />
-          {hasQuery && (
+          {hasValue && (
             <button
               type="button"
               onClick={clearSearch}
@@ -57,7 +61,7 @@ export function SearchBar({ onSearch, loading = false, className = "" }) {
         {/* Search Button */}
         <Button
           type="submit"
-          disabled={!hasQuery || loading}
+          disabled={!hasValue || loading}
           className="shrink-0"
         >
           {loading ? (
