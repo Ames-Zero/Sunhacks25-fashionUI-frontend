@@ -2,12 +2,12 @@ import { api } from './axios';
 
 // Search API service
 export const searchService = {
-  // Search for products with query
+  // Search for products with natural language query
   searchProducts: async (query) => {
     try {
-      // Encode the query for URL
-      const encodedQuery = encodeURIComponent(query);
-      const response = await api.get(`/api/v1/search?q=${encodedQuery}`);
+      const response = await api.post('/search-products', {
+        query: query.trim()
+      });
       return response.data;
     } catch (error) {
       console.error('Search API error:', error);

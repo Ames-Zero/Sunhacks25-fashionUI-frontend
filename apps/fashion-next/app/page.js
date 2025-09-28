@@ -5,14 +5,18 @@ import { useSearch } from "@/hooks/useSearch";
 import { searchService } from "@/lib/searchService";
 
 export default function Home() {
-  // Use the mock search function for now - replace with searchService.searchProducts for real API
-  const { query, setQuery, results, loading, error } = useSearch(
-    searchService.mockSearchProducts,
-    300 // 300ms debounce delay
+  // Use the real search API
+  const { query, setQuery, results, loading, error, performSearch } = useSearch(
+    searchService.searchProducts
   );
 
   const handleSearch = (searchQuery) => {
-    setQuery(searchQuery);
+    if (searchQuery.trim()) {
+      performSearch(searchQuery);
+    } else {
+      // Clear results when search is empty
+      setQuery("");
+    }
   };
 
   const hasSearched = Boolean(query && query.trim());

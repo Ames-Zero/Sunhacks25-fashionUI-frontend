@@ -1,139 +1,77 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, X, Loader2, Palette, Shirt } from "lucide-react";
-
-// Custom debounce hook
-const useDebounce = (value, delay) => {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
-};
+import { Search, X, Loader2 } from "lucide-react";
 
 export function SearchBar({ onSearch, loading = false, className = "" }) {
-  const [color, setColor] = useState("");
-  const [item, setItem] = useState("");
-  
-  // Debounce the search values
-  const debouncedColor = useDebounce(color, 300);
-  const debouncedItem = useDebounce(item, 300);
-
-  // Trigger search when debounced values change
-  useEffect(() => {
-    if (debouncedColor.trim() || debouncedItem.trim()) {
-      const searchQuery = buildSearchQuery(debouncedColor, debouncedItem);
-      if (searchQuery && onSearch) {
-        onSearch(searchQuery);
-      }
-    }
-  }, [debouncedColor, debouncedItem, onSearch]);
+  const [query, setQuery] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const searchQuery = buildSearchQuery(color, item);
-    if (searchQuery && onSearch) {
-      onSearch(searchQuery);
+    if (query.trim() && onSearch) {
+      onSearch(query.trim());
     }
   };
 
-  const buildSearchQuery = (colorValue, itemValue) => {
-    const parts = [];
-    if (colorValue.trim()) parts.push(colorValue.trim());
-    if (itemValue.trim()) parts.push(itemValue.trim());
-    return parts.join(" ");
-  };
-
-  const handleColorChange = (e) => {
+  const handleQueryChange = (e) => {
     const value = e.target.value;
-    setColor(value);
-    // Removed real-time search for better performance
+    setQuery(value);
   };
 
-  const handleItemChange = (e) => {
-    const value = e.target.value;
-    setItem(value);
-    // Removed real-time search for better performance
+  const clearSearch = () => {
+    setQuery("");
+    // Optionally clear search results when clearing the input
+    if (onSearch) {
+      onSearch("");
+    }
   };
 
-  const hasQuery = color.trim() || item.trim();
+  const hasQuery = query.trim();
 
   return (
     <form onSubmit={handleSubmit} className={`relative ${className}`}>
-      <div className="flex flex-col sm:flex-row gap-4 items-end">
-        {/* Color Input */}
-        <div className="flex-1">
-          <label
-            htmlFor="color-input"
-            className="block text-sm font-semibold mb-2 text-left"
-          >
-            Color
-          </label>
-          <div className="relative">
-            <Palette className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              id="color-input"
-              type="text"
-              placeholder="e.g., blue, red, white"
-              value={color}
-              onChange={handleColorChange}
-              className="pl-10 bg-gray-100 border-gray-200 focus:bg-gray-50 focus:border-gray-300 text-black transition-all duration-200"
-            />
-          </div>
+      <div className="flex gap-2 items-center">
+        {/* Single Search Input */}
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            type="text"
+            placeholder="Search for fashion items... (e.g., blue shirt, red dress)"
+            value={query}
+            onChange={handleQueryChange}
+            className="pl-10 pr-10 bg-gray-100 border-gray-200 focus:bg-gray-50 focus:border-gray-300 text-black transition-all duration-200"
+          />
+          {hasQuery && (
+            <button
+              type="button"
+              onClick={clearSearch}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
         </div>
 
-        {/* Item Input */}
-        <div className="flex-1">
-          <label
-            htmlFor="item-input"
-            className="block text-sm font-semibold mb-2 text-left"
-          >
-            Item Type
-          </label>
-          <div className="relative">
-            <Shirt className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              id="item-input"
-              type="text"
-              placeholder="e.g., shirt, jeans, trousers"
-              value={item}
-              onChange={handleItemChange}
-              className="pl-10 bg-gray-100 border-gray-200 focus:bg-gray-50 focus:border-gray-300 text-black transition-all duration-200"
-            />
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex gap-2">
-          <Button
-            type="submit"
-            disabled={!hasQuery || loading || !(color.trim() && item.trim())}
-            className="w-[138px]"
-          >
-            {loading && color.trim() && item.trim() ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Searching...
-              </>
-            ) : (
-              <>
-                <Search className="mr-2 h-4 w-4" />
-                Search
-              </>
-            )}
-          </Button>
-        </div>
+        {/* Search Button */}
+        <Button
+          type="submit"
+          disabled={!hasQuery || loading}
+          className="shrink-0"
+        >
+          {loading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Searching...
+            </>
+          ) : (
+            <>
+              <Search className="mr-2 h-4 w-4" />
+              Search
+            </>
+          )}
+        </Button>
       </div>
     </form>
   );

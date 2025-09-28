@@ -3,13 +3,18 @@
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Star, ShoppingCart } from "lucide-react";
+import { Star, ShoppingCart, Check, Heart } from "lucide-react";
 import { useState, memo } from "react";
+import { useWardrobe } from "@/contexts/WardrobeContext";
+import { motion } from "framer-motion";
 import Image from "next/image";
 
 export const ProductCard = memo(function ProductCard({ product }) {
   const [imageError, setImageError] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
+  const [isAdding, setIsAdding] = useState(false);
+
+  const { addToWardrobe, isInWardrobe } = useWardrobe();
 
   const handleImageError = () => {
     setImageError(true);
@@ -20,16 +25,59 @@ export const ProductCard = memo(function ProductCard({ product }) {
     setImageLoading(false);
   };
 
+  const handleAddToWardrobe = async () => {
+    if (isInWardrobeAlready || isAdding) return;
+
+    setIsAdding(true);
+
+    try {
+      // Add item to wardrobe
+      addToWardrobe({
+        id: product.id,
+        name: productName,
+        title: productName,
+        price: productPrice,
+        originalPrice: productOriginalPrice,
+        discount: productDiscount,
+        image: productImage,
+        category: productCategory,
+        rating: productRating,
+        reviews: productReviews,
+        brand: productBrand,
+        availability: productAvailability,
+        colors: productColors,
+        sizes: productSizes,
+        description: productDescription,
+      });
+
+      // Wait a moment for visual feedback
+      await new Promise((resolve) => setTimeout(resolve, 800));
+    } catch (error) {
+      console.error("Error adding to wardrobe:", error);
+    } finally {
+      setIsAdding(false);
+    }
+  };
+
+  const isInWardrobeAlready = isInWardrobe(product.id);
+
   // Handle both old and new data structures
-  const productName = product.product_name || product.title;
-  const productImage = product.image_url || product.image;
+  const productName = product.name || product.title || product.product_name;
+  const productImage = product.image || product.image_url;
   const productBrand = product.brand;
   const productPrice = product.price;
+  const productOriginalPrice = product.originalPrice;
+  const productDiscount = product.discount;
   const productRating = product.rating;
-  const productColors = product.colors;
+  const productReviews = product.reviews;
+  const productColors = product.colors; // Now an array of strings
+  const productSizes = product.sizes; // Array of sizes
   const productCategory = product.category;
   const productSubcategory = product.subcategory;
   const productAttributes = product.attributes;
+  const productDescription = product.description;
+  const productAvailability = product.availability;
+  const productTags = product.tags;
 
   return (
     <Card className="group relative overflow-hidden hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white/95 via-indigo-50/80 to-purple-100/70 backdrop-blur-sm border-indigo-200/30 shadow-lg hover:shadow-indigo-200/25 will-change-transform">
@@ -62,89 +110,151 @@ export const ProductCard = memo(function ProductCard({ product }) {
         )}
       </div>
 
-      <CardContent className="p-5 bg-gradient-to-br from-white/98 via-indigo-25/60 to-purple-50/80">
+      <CardContent className="p-6 bg-gradient-to-r from-white/98 via-indigo-50/40 to-purple-50/60 space-y-4">
         {/* Brand */}
         {productBrand && (
-          <p className="text-xs text-indigo-600 font-semibold uppercase tracking-wider mb-2 bg-indigo-100/50 px-2 py-1 rounded-full inline-block">
-            {productBrand}
-          </p>
+          <div className="flex justify-between items-start">
+            <span className="text-xs text-indigo-600 font-bold uppercase tracking-widest bg-gradient-to-r from-indigo-100 to-purple-100 px-3 py-1.5 rounded-full border border-indigo-200/50 shadow-sm">
+              {productBrand}
+            </span>
+            {productAvailability && (
+              <span
+                className={`text-xs px-2.5 py-1 rounded-full font-semibold shadow-sm ${
+                  productAvailability === "In Stock"
+                    ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
+                    : "bg-amber-100 text-amber-700 border border-amber-200"
+                }`}
+              >
+                {productAvailability}
+              </span>
+            )}
+          </div>
         )}
 
         {/* Product Name */}
-        <h3
-          className="font-bold text-lg mb-3 leading-tight text-gray-800 overflow-hidden"
-          style={{
-            display: "-webkit-box",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-          }}
-        >
-          {productName}
-        </h3>
-
-        {/* Category & Subcategory */}
-        {(productCategory || productSubcategory) && (
-          <div className="flex flex-wrap gap-2 mb-3">
-            {productCategory && (
-              <Badge variant="secondary" className="text-xs bg-purple-100 text-purple-700 border-purple-200">
-                {productCategory}
-              </Badge>
-            )}
-            {productSubcategory && (
-              <Badge variant="outline" className="text-xs border-indigo-200 text-indigo-600">
-                {productSubcategory}
-              </Badge>
-            )}
-          </div>
-        )}
-
-        {/* Rating */}
-        {productRating && (
-          <div className="flex items-center gap-2 mb-3">
-            <div className="flex items-center bg-yellow-50 px-2 py-1 rounded-full">
-              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-              <span className="text-sm font-semibold ml-1 text-gray-700">{productRating}</span>
+        <div className="space-y-2">
+          <h3
+            className="font-bold text-xl leading-tight text-gray-900 overflow-hidden"
+            style={{
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+            }}
+          >
+            {productName}
+          </h3>
+          
+          {/* Category & Subcategory */}
+          {(productCategory || productSubcategory) && (
+            <div className="flex flex-wrap gap-2">
+              {productCategory && (
+                <Badge
+                  variant="secondary"
+                  className="text-xs font-medium bg-purple-100 text-purple-700 border border-purple-200 hover:bg-purple-200 transition-colors"
+                >
+                  {productCategory}
+                </Badge>
+              )}
+              {productSubcategory && (
+                <Badge
+                  variant="outline"
+                  className="text-xs font-medium border-indigo-300 text-indigo-700 hover:bg-indigo-50 transition-colors"
+                >
+                  {productSubcategory}
+                </Badge>
+              )}
             </div>
-          </div>
-        )}
-
-        {/* Price */}
-        <div className="flex items-center gap-2 mb-4">
-          <span className="font-bold text-2xl text-indigo-700">${productPrice}</span>
+          )}
         </div>
 
-        {/* Colors */}
-        {productColors && (
-          <div className="mb-3">
-            <p className="text-sm font-semibold text-gray-700 mb-2">Colors:</p>
-            <div className="flex gap-2 items-center">
-              {productColors.primary && (
-                <div className="flex items-center gap-1">
-                  <div
-                    className="w-5 h-5 rounded-full border-2 border-white shadow-md"
-                    style={{
-                      backgroundColor: getColorValue(productColors.primary)
-                    }}
-                    title={productColors.primary}
-                  />
-                  <span className="text-xs font-medium text-gray-600">{productColors.primary}</span>
-                </div>
-              )}
-              {productColors.secondary && (
-                <div className="flex items-center gap-1">
-                  <div
-                    className="w-5 h-5 rounded-full border-2 border-white shadow-md"
-                    style={{
-                      backgroundColor: getColorValue(productColors.secondary)
-                    }}
-                    title={productColors.secondary}
-                  />
-                  <span className="text-xs font-medium text-gray-600">{productColors.secondary}</span>
-                </div>
+        {/* Rating & Reviews */}
+        {productRating && (
+          <div className="flex items-center justify-between">
+            <div className="flex items-center bg-gradient-to-r from-yellow-50 to-orange-50 px-3 py-2 rounded-lg border border-yellow-200/50 shadow-sm">
+              <Star className="h-4 w-4 fill-yellow-400 text-yellow-500 mr-1.5" />
+              <span className="text-sm font-bold text-gray-800">
+                {productRating}
+              </span>
+              {productReviews && (
+                <span className="text-xs text-gray-600 ml-1.5 font-medium">
+                  ({productReviews.toLocaleString()} reviews)
+                </span>
               )}
             </div>
           </div>
         )}
+
+        {/* Price Section */}
+        <div className="bg-gradient-to-r from-indigo-50/80 to-purple-50/80 p-4 rounded-xl border border-indigo-100 shadow-sm">
+          <div className="flex items-baseline gap-3">
+            <span className="font-black text-3xl text-indigo-700">
+              ${productPrice}
+            </span>
+            {productOriginalPrice && productOriginalPrice > productPrice && (
+              <>
+                <span className="text-base text-gray-500 line-through font-medium">
+                  ${productOriginalPrice}
+                </span>
+                {productDiscount && (
+                  <span className="text-sm bg-gradient-to-r from-emerald-500 to-green-500 text-white px-3 py-1.5 rounded-full font-bold shadow-md">
+                    {productDiscount} OFF
+                  </span>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Colors and Sizes */}
+        <div className="grid grid-cols-1 gap-4">
+          {productColors && productColors.length > 0 && (
+            <div className="space-y-2">
+              <h4 className="text-sm font-bold text-gray-800 flex items-center">
+                <div className="w-2 h-2 bg-indigo-500 rounded-full mr-2"></div>
+                Available Colors
+              </h4>
+              <div className="flex gap-2 flex-wrap">
+                {productColors.slice(0, 4).map((color, index) => (
+                  <span
+                    key={index}
+                    className="text-xs font-semibold bg-gradient-to-r from-indigo-100 to-indigo-200 text-indigo-800 px-3 py-1.5 rounded-full border border-indigo-300/50 shadow-sm hover:shadow-md transition-shadow"
+                  >
+                    {color}
+                  </span>
+                ))}
+                {productColors.length > 4 && (
+                  <span className="text-xs font-medium bg-gray-100 text-gray-600 px-3 py-1.5 rounded-full border border-gray-200">
+                    +{productColors.length - 4} more
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+          
+          {productSizes && productSizes.length > 0 && (
+            <div className="space-y-2">
+              <h4 className="text-sm font-bold text-gray-800 flex items-center">
+                <div className="w-2 h-2 bg-purple-500 rounded-full mr-2"></div>
+                Available Sizes
+              </h4>
+              <div className="flex gap-2 flex-wrap">
+                {productSizes.slice(0, 4).map((size, index) => (
+                  <span
+                    key={index}
+                    className="text-xs font-semibold bg-gradient-to-r from-purple-100 to-purple-200 text-purple-800 px-3 py-1.5 rounded-full border border-purple-300/50 shadow-sm hover:shadow-md transition-shadow"
+                  >
+                    {size}
+                  </span>
+                ))}
+                {productSizes.length > 4 && (
+                  <span className="text-xs font-medium bg-gray-100 text-gray-600 px-3 py-1.5 rounded-full border border-gray-200">
+                    +{productSizes.length - 4} more
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* Attributes */}
         {productAttributes && (
@@ -152,20 +262,30 @@ export const ProductCard = memo(function ProductCard({ product }) {
             <div className="grid grid-cols-2 gap-2">
               {productAttributes.material && (
                 <div className="bg-indigo-50 px-2 py-1 rounded text-center">
-                  <p className="text-xs text-indigo-600 font-semibold">Material</p>
-                  <p className="text-xs text-gray-700 capitalize">{productAttributes.material}</p>
+                  <p className="text-xs text-indigo-600 font-semibold">
+                    Material
+                  </p>
+                  <p className="text-xs text-gray-700 capitalize">
+                    {productAttributes.material}
+                  </p>
                 </div>
               )}
               {productAttributes.fit_type && (
                 <div className="bg-purple-50 px-2 py-1 rounded text-center">
                   <p className="text-xs text-purple-600 font-semibold">Fit</p>
-                  <p className="text-xs text-gray-700 capitalize">{productAttributes.fit_type}</p>
+                  <p className="text-xs text-gray-700 capitalize">
+                    {productAttributes.fit_type}
+                  </p>
                 </div>
               )}
               {productAttributes.pattern_type && (
                 <div className="bg-indigo-50 px-2 py-1 rounded text-center col-span-2">
-                  <p className="text-xs text-indigo-600 font-semibold">Pattern</p>
-                  <p className="text-xs text-gray-700 capitalize">{productAttributes.pattern_type}</p>
+                  <p className="text-xs text-indigo-600 font-semibold">
+                    Pattern
+                  </p>
+                  <p className="text-xs text-gray-700 capitalize">
+                    {productAttributes.pattern_type}
+                  </p>
                 </div>
               )}
             </div>
@@ -173,42 +293,61 @@ export const ProductCard = memo(function ProductCard({ product }) {
         )}
       </CardContent>
 
-      <CardFooter className="p-4 pt-0 bg-gradient-to-r from-white/98 via-indigo-25/40 to-purple-50/60">
-        <Button className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300" size="sm">
-          <ShoppingCart className="mr-2 h-4 w-4" />
-          Add to Wardrobe
-        </Button>
+      <CardFooter className="p-4 pt-0 bg-gradient-to-r from-white/98 via-indigo-50/40 to-purple-50/60">
+        <motion.div className="w-full" whileTap={{ scale: 0.98 }}>
+          <Button
+            className={`w-full shadow-lg hover:shadow-xl transition-all duration-300 ${
+              isInWardrobeAlready
+                ? "bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                : "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+            } text-white`}
+            size="sm"
+            onClick={handleAddToWardrobe}
+            disabled={isAdding}
+          >
+            {isAdding ? (
+              <>
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  className="mr-2"
+                >
+                  <ShoppingCart className="h-4 w-4" />
+                </motion.div>
+                Adding...
+              </>
+            ) : isInWardrobeAlready ? (
+              <>
+                <Check className="mr-2 h-4 w-4" />
+                In Wardrobe
+              </>
+            ) : (
+              <>
+                <Heart className="mr-2 h-4 w-4" />
+                Add to Wardrobe
+              </>
+            )}
+          </Button>
+        </motion.div>
       </CardFooter>
     </Card>
   );
-
-  // Helper function to get color values
-  function getColorValue(colorName) {
-    const colorMap = {
-      white: "#ffffff",
-      black: "#000000",
-      blue: "#3b82f6",
-      red: "#ef4444",
-      gray: "#6b7280",
-      grey: "#6b7280",
-      green: "#22c55e",
-      yellow: "#eab308",
-      purple: "#a855f7",
-      pink: "#ec4899",
-      orange: "#f97316",
-      brown: "#a3a3a3",
-    };
-    return colorMap[colorName?.toLowerCase()] || "#9ca3af";
-  }
 });
 
 // Grid container for products
-export const ProductGrid = memo(function ProductGrid({ products, loading, error }) {
+export const ProductGrid = memo(function ProductGrid({
+  products,
+  loading,
+  error,
+}) {
   if (loading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {Array.from({ length: 6 }).map((_, index) => (
-          <Card key={index} className="animate-pulse bg-purple-100/80 backdrop-blur-sm border-purple-300 shadow-purple-200/50">
+          <Card
+            key={index}
+            className="animate-pulse bg-purple-100/80 backdrop-blur-sm border-purple-300 shadow-purple-200/50"
+          >
             <div
               className="bg-muted rounded-sm"
               style={{ maxHeight: "530px", width: "100%", aspectRatio: "3/4" }}

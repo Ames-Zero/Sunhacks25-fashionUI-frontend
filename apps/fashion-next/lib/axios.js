@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create axios instance with default configuration
 const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://jsonplaceholder.typicode.com',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || '/api',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',

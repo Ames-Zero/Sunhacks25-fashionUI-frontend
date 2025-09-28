@@ -10,6 +10,7 @@ import {
 import { SearchBar } from "./SearchBar";
 import { ProductGrid } from "./ProductCard";
 import { ThreeBackground } from "./ThreeBackground";
+import CheckoutWardrobeButton from "./CheckoutWardrobeButton";
 import {
   Card,
   CardContent,
@@ -322,6 +323,9 @@ export function ParallaxLanding({
           </motion.div>
         </div>
       </motion.section>
+      
+      {/* Checkout Wardrobe Button */}
+      <CheckoutWardrobeButton />
     </div>
   );
 }

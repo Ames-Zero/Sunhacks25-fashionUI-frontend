@@ -1,59 +1,43 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
-// Custom hook for debounced values
-export function useDebounce(value, delay) {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
-}
-
-// Custom hook for search functionality with debouncing
-export function useSearch(searchFunction, delay = 500) {
+// Custom hook for search functionality with manual trigger
+export function useSearch(searchFunction) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const debouncedQuery = useDebounce(query, delay);
-
-  useEffect(() => {
-    if (!debouncedQuery.trim()) {
+  // Manual search function that can be called on demand
+  const performSearch = async (searchQuery) => {
+    const queryToSearch = searchQuery || query;
+    
+    if (!queryToSearch.trim()) {
       setResults([]);
       setLoading(false);
       return;
     }
 
-    const performSearch = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await searchFunction(debouncedQuery);
-        setResults(data);
-      } catch (err) {
-        setError(err.message || 'Search failed');
-        setResults([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    performSearch();
-  }, [debouncedQuery, searchFunction]);
+    try {
+      setLoading(true);
+      setError(null);
+      setQuery(queryToSearch); // Update the query state
+      const data = await searchFunction(queryToSearch);
+      // Handle both direct array and response object with results array
+      const searchResults = Array.isArray(data) ? data : (data.results || data);
+      setResults(searchResults);
+    } catch (err) {
+      setError(err.message || 'Search failed');
+      setResults([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const clearSearch = () => {
     setQuery('');
     setResults([]);
     setError(null);
+    setLoading(false);
   };
 
   return {
@@ -63,5 +47,6 @@ export function useSearch(searchFunction, delay = 500) {
     loading,
     error,
     clearSearch,
+    performSearch,
   };
 }
