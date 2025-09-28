@@ -23,7 +23,7 @@ export function useSearch(searchFunction) {
       setQuery(queryToSearch); // Update the query state
       const data = await searchFunction(queryToSearch);
       // Handle both direct array and response object with results array
-      const searchResults = Array.isArray(data) ? data : (data.results || data);
+      const searchResults = Array.isArray(data) ? data : (data.products || data);
       setResults(searchResults);
     } catch (err) {
       setError(err.message || 'Search failed');

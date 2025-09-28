@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, X, Loader2 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 export function SearchBar({
   onSearch,
@@ -12,6 +13,16 @@ export function SearchBar({
   value = "",
   onChange = () => {},
 }) {
+  const searchParams = useSearchParams();
+  
+  // Initialize value from URL query on mount only
+  useEffect(() => {
+    const urlQuery = searchParams.get('q');
+    if (urlQuery && urlQuery !== value && urlQuery.trim()) {
+      onChange(urlQuery);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]); // Only run when searchParams changes
   const handleSubmit = (e) => {
     e.preventDefault();
     if (value.trim() && onSearch) {

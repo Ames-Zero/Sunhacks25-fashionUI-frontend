@@ -8,6 +8,7 @@ import { useState, memo } from "react";
 import { useWardrobe } from "@/contexts/WardrobeContext";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { searchService } from "@/lib/searchService";
 
 export const ProductCard = memo(function ProductCard({ product }) {
   const [imageError, setImageError] = useState(false);
@@ -49,6 +50,9 @@ export const ProductCard = memo(function ProductCard({ product }) {
         sizes: productSizes,
         description: productDescription,
       });
+
+      const apiResponse = await searchService.addToCloset(product.id);
+      console.log("API response for adding to closet:", apiResponse);
 
       // Wait a moment for visual feedback
       await new Promise((resolve) => setTimeout(resolve, 800));
@@ -137,13 +141,14 @@ export const ProductCard = memo(function ProductCard({ product }) {
             className="font-bold text-xl leading-tight text-gray-900 overflow-hidden"
             style={{
               display: "-webkit-box",
-              WebkitLineClamp: 2,
+              WebkitLineClamp: 1,
               WebkitBoxOrient: "vertical",
+              wordBreak: "break-all",
             }}
           >
             {productName}
           </h3>
-          
+
           {/* Category & Subcategory */}
           {(productCategory || productSubcategory) && (
             <div className="flex flex-wrap gap-2">
@@ -230,7 +235,7 @@ export const ProductCard = memo(function ProductCard({ product }) {
               </div>
             </div>
           )}
-          
+
           {productSizes && productSizes.length > 0 && (
             <div className="space-y-2">
               <h4 className="text-sm font-bold text-gray-800 flex items-center">
@@ -394,7 +399,7 @@ export const ProductGrid = memo(function ProductGrid({
               <ShoppingCart className="h-12 w-12 text-white" />
             </div>
           </motion.div>
-          
+
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -404,18 +409,23 @@ export const ProductGrid = memo(function ProductGrid({
               No Products Found
             </h3>
             <p className="text-gray-600 text-lg mb-6 leading-relaxed">
-              We couldn&apos;t find any products matching your search. Try adjusting your search terms or browse with different keywords.
+              We couldn&apos;t find any products matching your search. Try
+              adjusting your search terms or browse with different keywords.
             </p>
-            
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
                 variant="default"
                 onClick={() => {
-                  const searchInput = document.querySelector('input[type="text"]');
+                  const searchInput =
+                    document.querySelector('input[type="text"]');
                   if (searchInput) {
-                    searchInput.value = '';
+                    searchInput.value = "";
                     searchInput.focus();
-                    searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    searchInput.scrollIntoView({
+                      behavior: "smooth",
+                      block: "center",
+                    });
                   }
                 }}
                 className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
@@ -423,14 +433,18 @@ export const ProductGrid = memo(function ProductGrid({
                 <Sparkles className="mr-2 h-4 w-4" />
                 Start New Search
               </Button>
-              
+
               <Button
                 variant="outline"
                 onClick={() => {
-                  const searchInput = document.querySelector('input[type="text"]');
+                  const searchInput =
+                    document.querySelector('input[type="text"]');
                   if (searchInput) {
                     searchInput.focus();
-                    searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    searchInput.scrollIntoView({
+                      behavior: "smooth",
+                      block: "center",
+                    });
                   }
                 }}
                 className="border-indigo-300 text-indigo-700 hover:bg-indigo-50"

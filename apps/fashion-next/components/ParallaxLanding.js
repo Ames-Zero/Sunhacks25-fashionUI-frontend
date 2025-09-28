@@ -26,10 +26,11 @@ export function ParallaxLanding({
   loading,
   error,
   hasSearched,
+  query,
+  setQuery,
 }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const containerRef = useRef(null);
-  const [query, setQuery] = useState("");
 
   const { scrollY } = useScroll();
 

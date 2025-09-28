@@ -106,8 +106,9 @@ export const WardrobeCard = memo(function WardrobeCard({ item, onRemove }) {
             className="font-bold text-lg mb-3 leading-tight text-gray-800 overflow-hidden"
             style={{
               display: "-webkit-box",
-              WebkitLineClamp: 2,
+              WebkitLineClamp: 1,
               WebkitBoxOrient: "vertical",
+              wordBreak: "break-all",
             }}
           >
             {productName}

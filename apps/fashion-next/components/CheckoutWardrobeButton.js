@@ -3,19 +3,23 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ShoppingBag, ArrowRight } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useWardrobe } from "@/contexts/WardrobeContext";
 
 export default function CheckoutWardrobeButton() {
   const router = useRouter();
-  const { wardrobeItems } = useWardrobe();
+  const searchParams = useSearchParams();
+  const { wardrobeItems, isLoading } = useWardrobe();
   const itemCount = wardrobeItems.length;
 
   const handleCheckoutWardrobe = () => {
-    router.push('/wardrobe');
+    const urlQuery = searchParams.get('q');
+    const wardrobeUrl = urlQuery ? `/wardrobe?q=${encodeURIComponent(urlQuery)}` : '/wardrobe';
+    router.push(wardrobeUrl);
   };
 
-  if (itemCount === 0) return null;
+  // Don't show button while loading or if no items
+  if (isLoading || itemCount === 0) return null;
 
   return (
     <motion.div
