@@ -17,7 +17,10 @@ export function ProductCard({ product }) {
   return (
     <Card className="group relative overflow-hidden hover:shadow-lg transition-all duration-300">
       {/* Product Image */}
-      <div className="relative overflow-hidden" style={{ maxHeight: '530px', width: '100%', aspectRatio: '3/4' }}>
+      <div
+        className="relative overflow-hidden"
+        style={{ maxHeight: "530px", width: "100%", aspectRatio: "3/4" }}
+      >
         {!imageError && product.image ? (
           <Image
             src={product.image}
@@ -165,6 +168,13 @@ export function ProductCard({ product }) {
           </div>
         )}
       </CardContent>
+
+      <CardFooter className="p-4 pt-0">
+        <Button className="w-full" size="sm">
+          <ShoppingCart className="mr-2 h-4 w-4" />
+          Add to Wardrobe
+        </Button>
+      </CardFooter>
     </Card>
   );
 }
@@ -176,7 +186,10 @@ export function ProductGrid({ products, loading, error }) {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {Array.from({ length: 6 }).map((_, index) => (
           <Card key={index} className="animate-pulse">
-            <div className="bg-muted rounded-sm" style={{ maxHeight: '530px', aspectRatio: '3/4' }} />
+            <div
+              className="bg-muted rounded-sm"
+              style={{ maxHeight: "530px", width: "100%", aspectRatio: "3/4" }}
+            />
             <CardContent className="p-4">
               <div className="h-4 bg-muted rounded mb-2" />
               <div className="h-4 bg-muted rounded w-3/4 mb-2" />
@@ -195,17 +208,6 @@ export function ProductGrid({ products, loading, error }) {
         <Button variant="outline" onClick={() => window.location.reload()}>
           Try Again
         </Button>
-      </div>
-    );
-  }
-
-  if (!products || products.length === 0) {
-    return (
-      <div className="text-center py-12">
-        <ShoppingCart className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-        <p className="text-muted-foreground">
-          No products found. Try a different search term.
-        </p>
       </div>
     );
   }

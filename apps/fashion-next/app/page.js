@@ -1,10 +1,16 @@
-'use client';
+"use client";
 
-import { SearchBar } from '@/components/SearchBar';
-import { ProductGrid } from '@/components/ProductCard';
-import { useSearch } from '@/hooks/useSearch';
-import { searchService } from '@/lib/searchService';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { SearchBar } from "@/components/SearchBar";
+import { ProductGrid } from "@/components/ProductCard";
+import { useSearch } from "@/hooks/useSearch";
+import { searchService } from "@/lib/searchService";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export default function Home() {
   // Use the mock search function for now - replace with searchService.searchProducts for real API
@@ -16,6 +22,8 @@ export default function Home() {
   const handleSearch = (searchQuery) => {
     setQuery(searchQuery);
   };
+
+  console.log("Search results:", results);
 
   return (
     <div className="container mx-auto p-6">
@@ -29,7 +37,7 @@ export default function Home() {
 
       {/* Search Section */}
       <div className="mb-8">
-        <SearchBar 
+        <SearchBar
           placeholder="Search for fashion items (e.g., white shirt, blue jeans, red dress)"
           onSearch={handleSearch}
           loading={loading}
@@ -40,10 +48,12 @@ export default function Home() {
       {/* Results Section */}
       {query ? (
         <div className="mb-8">
-          <ProductGrid 
-            products={results} 
-            loading={loading} 
-            error={error} 
+          <ProductGrid
+            products={results}
+            loading={
+              loading || (query && query.length > 0 && results.length === 0)
+            }
+            error={error}
           />
         </div>
       ) : (
@@ -56,8 +66,8 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Search using natural language like "white cotton shirt" or "blue denim jeans" 
-                and find exactly what you're looking for.
+                Search using natural language like "white cotton shirt" or "blue
+                denim jeans" and find exactly what you're looking for.
               </p>
             </CardContent>
           </Card>
@@ -69,8 +79,8 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Get instant results as you type with smart debouncing that reduces 
-                API calls while providing fast search experience.
+                Get instant results as you type with smart debouncing that
+                reduces API calls while providing fast search experience.
               </p>
             </CardContent>
           </Card>
@@ -82,8 +92,9 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Each product is displayed in a beautiful card with images, prices, 
-                ratings, and detailed information to help you make the right choice.
+                Each product is displayed in a beautiful card with images,
+                prices, ratings, and detailed information to help you make the
+                right choice.
               </p>
             </CardContent>
           </Card>
@@ -96,13 +107,13 @@ export default function Home() {
           <h3 className="text-lg font-semibold mb-4">Popular Searches</h3>
           <div className="flex flex-wrap justify-center gap-2">
             {[
-              'white shirt',
-              'blue jeans',
-              'black dress',
-              'red hoodie',
-              'summer dress',
-              'winter coat',
-              'formal shirt'
+              "white shirt",
+              "blue jeans",
+              "black dress",
+              "red hoodie",
+              "summer dress",
+              "winter coat",
+              "formal shirt",
             ].map((searchTerm) => (
               <button
                 key={searchTerm}
