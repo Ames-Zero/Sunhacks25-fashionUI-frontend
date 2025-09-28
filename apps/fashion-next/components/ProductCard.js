@@ -14,169 +14,183 @@ export function ProductCard({ product }) {
     setImageError(true);
   };
 
+  // Handle both old and new data structures
+  const productName = product.product_name || product.title;
+  const productImage = product.image_url || product.image;
+  const productBrand = product.brand;
+  const productPrice = product.price;
+  const productRating = product.rating;
+  const productColors = product.colors;
+  const productCategory = product.category;
+  const productSubcategory = product.subcategory;
+  const productAttributes = product.attributes;
+
   return (
-    <Card className="group relative overflow-hidden hover:shadow-lg transition-all duration-300">
+    <Card className="group relative overflow-hidden hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white/95 via-indigo-50/80 to-purple-100/70 backdrop-blur-sm border-indigo-200/30 shadow-lg hover:shadow-indigo-200/25">
       {/* Product Image */}
       <div
-        className="relative overflow-hidden"
+        className="relative overflow-hidden bg-gradient-to-br from-indigo-100 to-purple-100"
         style={{ maxHeight: "530px", width: "100%", aspectRatio: "3/4" }}
       >
-        {!imageError && product.image ? (
+        {!imageError && productImage ? (
           <Image
-            src={product.image}
-            alt={product.title}
+            src={productImage}
+            alt={productName}
             fill
             sizes="(max-width: 768px) 100vw, 33vw"
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             onError={handleImageError}
             style={{ objectFit: "cover" }}
             priority={false}
           />
         ) : (
-          <div className="w-full h-full bg-muted flex items-center justify-center">
-            <div className="text-center text-muted-foreground">
+          <div className="w-full h-full bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center">
+            <div className="text-center text-indigo-400">
               <ShoppingCart className="h-12 w-12 mx-auto mb-2" />
-              <p className="text-sm">Image not available</p>
+              <p className="text-sm font-medium">Image not available</p>
             </div>
           </div>
         )}
       </div>
 
-      <CardContent className="p-4">
+      <CardContent className="p-5 bg-gradient-to-br from-white/98 via-indigo-25/60 to-purple-50/80">
         {/* Brand */}
-        {product.brand && (
-          <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
-            {product.brand}
+        {productBrand && (
+          <p className="text-xs text-indigo-600 font-semibold uppercase tracking-wider mb-2 bg-indigo-100/50 px-2 py-1 rounded-full inline-block">
+            {productBrand}
           </p>
         )}
 
-        {/* Title */}
+        {/* Product Name */}
         <h3
-          className="font-semibold text-sm mb-2 leading-tight overflow-hidden"
+          className="font-bold text-lg mb-3 leading-tight text-gray-800 overflow-hidden"
           style={{
             display: "-webkit-box",
             WebkitLineClamp: 2,
             WebkitBoxOrient: "vertical",
           }}
         >
-          {product.title}
+          {productName}
         </h3>
 
-        {/* Description */}
-        {product.description && (
-          <p
-            className="text-xs text-muted-foreground mb-3 overflow-hidden"
-            style={{
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-            }}
-          >
-            {product.description}
-          </p>
-        )}
-
-        {/* Rating */}
-        {product.rating && (
-          <div className="flex items-center gap-1 mb-2">
-            <div className="flex items-center">
-              <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-              <span className="text-xs font-medium ml-1">{product.rating}</span>
-            </div>
-            {product.reviews && (
-              <span className="text-xs text-muted-foreground">
-                ({product.reviews} reviews)
-              </span>
+        {/* Category & Subcategory */}
+        {(productCategory || productSubcategory) && (
+          <div className="flex flex-wrap gap-2 mb-3">
+            {productCategory && (
+              <Badge variant="secondary" className="text-xs bg-purple-100 text-purple-700 border-purple-200">
+                {productCategory}
+              </Badge>
+            )}
+            {productSubcategory && (
+              <Badge variant="outline" className="text-xs border-indigo-200 text-indigo-600">
+                {productSubcategory}
+              </Badge>
             )}
           </div>
         )}
 
-        {/* Price */}
-        <div className="flex items-center gap-2 mb-2">
-          <span className="font-bold text-lg">${product.price}</span>
-          {product.originalPrice && product.originalPrice > product.price && (
-            <span className="text-sm text-muted-foreground line-through">
-              ${product.originalPrice}
-            </span>
-          )}
-        </div>
-
-        {/* Availability */}
-        {product.availability && (
-          <div className="mb-3">
-            <Badge
-              variant={
-                product.availability === "In Stock" ? "default" : "secondary"
-              }
-              className="text-xs"
-            >
-              {product.availability}
-            </Badge>
+        {/* Rating */}
+        {productRating && (
+          <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center bg-yellow-50 px-2 py-1 rounded-full">
+              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+              <span className="text-sm font-semibold ml-1 text-gray-700">{productRating}</span>
+            </div>
           </div>
         )}
 
+        {/* Price */}
+        <div className="flex items-center gap-2 mb-4">
+          <span className="font-bold text-2xl text-indigo-700">${productPrice}</span>
+        </div>
+
         {/* Colors */}
-        {product.colors && product.colors.length > 0 && (
-          <div className="mb-2">
-            <p className="text-xs text-muted-foreground mb-1">Colors:</p>
-            <div className="flex gap-1">
-              {product.colors.slice(0, 3).map((color, index) => (
-                <div
-                  key={index}
-                  className="w-4 h-4 rounded-full border border-border"
-                  style={{
-                    backgroundColor:
-                      color.toLowerCase() === "white"
-                        ? "#ffffff"
-                        : color.toLowerCase() === "black"
-                        ? "#000000"
-                        : color.toLowerCase() === "blue"
-                        ? "#3b82f6"
-                        : color.toLowerCase() === "red"
-                        ? "#ef4444"
-                        : color.toLowerCase() === "gray"
-                        ? "#6b7280"
-                        : "#9ca3af",
-                  }}
-                  title={color}
-                />
-              ))}
-              {product.colors.length > 3 && (
-                <span className="text-xs text-muted-foreground ml-1">
-                  +{product.colors.length - 3}
-                </span>
+        {productColors && (
+          <div className="mb-3">
+            <p className="text-sm font-semibold text-gray-700 mb-2">Colors:</p>
+            <div className="flex gap-2 items-center">
+              {productColors.primary && (
+                <div className="flex items-center gap-1">
+                  <div
+                    className="w-5 h-5 rounded-full border-2 border-white shadow-md"
+                    style={{
+                      backgroundColor: getColorValue(productColors.primary)
+                    }}
+                    title={productColors.primary}
+                  />
+                  <span className="text-xs font-medium text-gray-600">{productColors.primary}</span>
+                </div>
+              )}
+              {productColors.secondary && (
+                <div className="flex items-center gap-1">
+                  <div
+                    className="w-5 h-5 rounded-full border-2 border-white shadow-md"
+                    style={{
+                      backgroundColor: getColorValue(productColors.secondary)
+                    }}
+                    title={productColors.secondary}
+                  />
+                  <span className="text-xs font-medium text-gray-600">{productColors.secondary}</span>
+                </div>
               )}
             </div>
           </div>
         )}
 
-        {/* Sizes */}
-        {product.sizes && product.sizes.length > 0 && (
-          <div className="mb-3">
-            <p className="text-xs text-muted-foreground mb-1">Sizes:</p>
-            <div className="flex gap-1">
-              {product.sizes.slice(0, 4).map((size, index) => (
-                <Badge
-                  key={index}
-                  variant="outline"
-                  className="text-xs px-2 py-0"
-                >
-                  {size}
-                </Badge>
-              ))}
+        {/* Attributes */}
+        {productAttributes && (
+          <div className="mb-4">
+            <div className="grid grid-cols-2 gap-2">
+              {productAttributes.material && (
+                <div className="bg-indigo-50 px-2 py-1 rounded text-center">
+                  <p className="text-xs text-indigo-600 font-semibold">Material</p>
+                  <p className="text-xs text-gray-700 capitalize">{productAttributes.material}</p>
+                </div>
+              )}
+              {productAttributes.fit_type && (
+                <div className="bg-purple-50 px-2 py-1 rounded text-center">
+                  <p className="text-xs text-purple-600 font-semibold">Fit</p>
+                  <p className="text-xs text-gray-700 capitalize">{productAttributes.fit_type}</p>
+                </div>
+              )}
+              {productAttributes.pattern_type && (
+                <div className="bg-indigo-50 px-2 py-1 rounded text-center col-span-2">
+                  <p className="text-xs text-indigo-600 font-semibold">Pattern</p>
+                  <p className="text-xs text-gray-700 capitalize">{productAttributes.pattern_type}</p>
+                </div>
+              )}
             </div>
           </div>
         )}
       </CardContent>
 
-      <CardFooter className="p-4 pt-0">
-        <Button className="w-full" size="sm">
+      <CardFooter className="p-4 pt-0 bg-gradient-to-r from-white/98 via-indigo-25/40 to-purple-50/60">
+        <Button className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300" size="sm">
           <ShoppingCart className="mr-2 h-4 w-4" />
           Add to Wardrobe
         </Button>
       </CardFooter>
     </Card>
   );
+
+  // Helper function to get color values
+  function getColorValue(colorName) {
+    const colorMap = {
+      white: "#ffffff",
+      black: "#000000",
+      blue: "#3b82f6",
+      red: "#ef4444",
+      gray: "#6b7280",
+      grey: "#6b7280",
+      green: "#22c55e",
+      yellow: "#eab308",
+      purple: "#a855f7",
+      pink: "#ec4899",
+      orange: "#f97316",
+      brown: "#a3a3a3",
+    };
+    return colorMap[colorName?.toLowerCase()] || "#9ca3af";
+  }
 }
 
 // Grid container for products
@@ -185,7 +199,7 @@ export function ProductGrid({ products, loading, error }) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {Array.from({ length: 6 }).map((_, index) => (
-          <Card key={index} className="animate-pulse">
+          <Card key={index} className="animate-pulse bg-purple-100/80 backdrop-blur-sm border-purple-300 shadow-purple-200/50">
             <div
               className="bg-muted rounded-sm"
               style={{ maxHeight: "530px", width: "100%", aspectRatio: "3/4" }}

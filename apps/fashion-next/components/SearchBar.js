@@ -1,17 +1,13 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Search, X, Loader2, Palette, Shirt } from 'lucide-react';
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Search, X, Loader2, Palette, Shirt } from "lucide-react";
 
-export function SearchBar({ 
-  onSearch, 
-  loading = false,
-  className = "" 
-}) {
-  const [color, setColor] = useState('');
-  const [item, setItem] = useState('');
+export function SearchBar({ onSearch, loading = false, className = "" }) {
+  const [color, setColor] = useState("");
+  const [item, setItem] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -25,15 +21,7 @@ export function SearchBar({
     const parts = [];
     if (colorValue.trim()) parts.push(colorValue.trim());
     if (itemValue.trim()) parts.push(itemValue.trim());
-    return parts.join(' ');
-  };
-
-  const handleClear = () => {
-    setColor('');
-    setItem('');
-    if (onSearch) {
-      onSearch('');
-    }
+    return parts.join(" ");
   };
 
   const handleColorChange = (e) => {
@@ -61,7 +49,10 @@ export function SearchBar({
       <div className="flex flex-col sm:flex-row gap-4 items-end">
         {/* Color Input */}
         <div className="flex-1">
-          <label htmlFor="color-input" className="block text-sm font-medium mb-2">
+          <label
+            htmlFor="color-input"
+            className="block text-sm font-semibold mb-2 text-left"
+          >
             Color
           </label>
           <div className="relative">
@@ -73,14 +64,16 @@ export function SearchBar({
               value={color}
               onChange={handleColorChange}
               className="pl-10 bg-gray-100 border-gray-200 focus:bg-gray-50 focus:border-gray-300 text-black"
-              disabled={loading}
             />
           </div>
         </div>
 
         {/* Item Input */}
         <div className="flex-1">
-          <label htmlFor="item-input" className="block text-sm font-medium mb-2">
+          <label
+            htmlFor="item-input"
+            className="block text-sm font-semibold mb-2 text-left"
+          >
             Item Type
           </label>
           <div className="relative">
@@ -92,30 +85,18 @@ export function SearchBar({
               value={item}
               onChange={handleItemChange}
               className="pl-10 bg-gray-100 border-gray-200 focus:bg-gray-50 focus:border-gray-300 text-black"
-              disabled={loading}
             />
           </div>
         </div>
 
         {/* Action Buttons */}
         <div className="flex gap-2">
-          {hasQuery && (
-            <Button 
-              type="button"
-              variant="outline"
-              onClick={handleClear}
-              disabled={loading}
-              className="px-3"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          )}
-          
-          <Button 
-            type="submit" 
-            disabled={!hasQuery || loading}
+          <Button
+            type="submit"
+            disabled={!hasQuery || loading || !(color.trim() && item.trim())}
+            className="w-[138px]"
           >
-            {loading ? (
+            {loading && color.trim() && item.trim() ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Searching...
