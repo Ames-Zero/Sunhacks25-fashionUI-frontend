@@ -48,5 +48,6 @@ export function useSearch(searchFunction) {
     error,
     clearSearch,
     performSearch,
+    setResults
   };
 }

@@ -23,7 +23,9 @@ export function SearchBar({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]); // Only run when searchParams changes
+  
   const handleSubmit = (e) => {
+    console.log("SearchBar handleSubmit called", value, onSearch);
     e.preventDefault();
     if (value.trim() && onSearch) {
       onSearch(value.trim());

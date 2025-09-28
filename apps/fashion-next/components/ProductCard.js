@@ -98,7 +98,11 @@ export const ProductCard = memo(function ProductCard({ product }) {
             sizes="(max-width: 768px) 100vw, 33vw"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 will-change-transform"
             onError={handleImageError}
-            style={{ objectFit: "contain", mixBlendMode: "multiply", backgroundColor: 'transparent' }}
+            style={{
+              objectFit: "contain",
+              mixBlendMode: "multiply",
+              backgroundColor: "transparent",
+            }}
             priority={false}
             loading="lazy"
             placeholder="blur"
@@ -118,9 +122,10 @@ export const ProductCard = memo(function ProductCard({ product }) {
         {/* Brand */}
         {productBrand && (
           <div className="flex justify-between items-start">
-            <span className="text-xs text-indigo-600 font-bold uppercase tracking-widest bg-gradient-to-r from-indigo-100 to-purple-100 px-3 py-1.5 rounded-full border border-indigo-200/50 shadow-sm">
+            <span className="truncate text-xs text-indigo-600 font-bold uppercase tracking-widest bg-gradient-to-r from-indigo-100 to-purple-100 px-3 py-1.5 rounded-full border border-indigo-200/50 shadow-sm flex-1 min-w-0">
               {productBrand}
             </span>
+
             {productAvailability && (
               <span
                 className={`text-xs px-2.5 py-1 rounded-full font-semibold shadow-sm ${

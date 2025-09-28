@@ -11,6 +11,7 @@ import { SearchBar } from "./SearchBar";
 import { ProductGrid } from "./ProductCard";
 import { ThreeBackground } from "./ThreeBackground";
 import CheckoutWardrobeButton from "./CheckoutWardrobeButton";
+import FashionRecommendationFloat from "./FashionRecommendationFloat";
 import {
   Card,
   CardContent,
@@ -290,6 +291,9 @@ export function ParallaxLanding({
 
       {/* Checkout Wardrobe Button */}
       <CheckoutWardrobeButton />
+      
+      {/* Fashion Recommendation Float */}
+      <FashionRecommendationFloat />
     </div>
   );
 }

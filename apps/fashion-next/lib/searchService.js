@@ -123,4 +123,28 @@ export const searchService = {
       );
     }
   },
+
+  // Get fashion recommendations based on user prompt
+  getFashionRecommendations: async (prompt) => {
+    try {
+      const response = await api.post(
+        "/outfit-suggestions",
+        {
+          query: prompt.trim(),
+        },
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      );
+      console.log("Fashion recommendations response:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Fashion recommendations API error:", error);
+      throw new Error(
+        error.response?.data?.message || "Failed to get fashion recommendations"
+      );
+    }
+  },
 };
