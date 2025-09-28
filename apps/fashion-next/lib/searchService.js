@@ -5,17 +5,9 @@ export const searchService = {
   // Search for products with natural language query
   searchProducts: async (query) => {
     try {
-      const response = await api.post(
-        "/search-products",
-        {
-          query: query.trim(),
-        },
-        {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        }
-      );
+      const response = await api.post("/search-products", {
+        query: query.trim(),
+      });
       return response.data;
     } catch (error) {
       console.error("Search API error:", error);
@@ -81,15 +73,9 @@ export const searchService = {
   // Add product to closet/wardrobe
   addToCloset: async (productId) => {
     try {
-      const response = await api.post(
-        "/add-to-closet",
-        `product_id=${encodeURIComponent(productId)}`,
-        {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        }
-      );
+      const response = await api.post("/add-to-closet", {
+        product_id: productId,
+      });
       console.log("Add to closet response:", response.data);
       return response.data;
     } catch (error) {
@@ -127,17 +113,9 @@ export const searchService = {
   // Get fashion recommendations based on user prompt
   getFashionRecommendations: async (prompt) => {
     try {
-      const response = await api.post(
-        "/outfit-suggestions",
-        {
-          query: prompt.trim(),
-        },
-        {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        }
-      );
+      const response = await api.post("/outfit-suggestions", {
+        query: prompt.trim(),
+      });
       console.log("Fashion recommendations response:", response.data);
       return response.data;
     } catch (error) {
