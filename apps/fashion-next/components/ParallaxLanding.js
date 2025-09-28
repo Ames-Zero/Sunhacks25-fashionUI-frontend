@@ -20,52 +20,6 @@ import {
 } from "@/components/ui/card";
 import { ChevronDown, Sparkles, Star, Zap } from "lucide-react";
 
-// Dummy products for initial display
-const dummyProducts = [
-  {
-    id: 1,
-    title: "Elegant White Shirt",
-    description: "Premium cotton shirt perfect for any occasion",
-    price: 89,
-    originalPrice: 120,
-    image: "https://picsum.photos/300/400?random=1",
-    rating: 4.8,
-    reviews: 245,
-    brand: "StyleCo",
-    availability: "In Stock",
-    colors: ["White", "Blue", "Black"],
-    sizes: ["S", "M", "L", "XL"],
-  },
-  {
-    id: 2,
-    title: "Classic Blue Jeans",
-    description: "Comfortable denim jeans with modern fit",
-    price: 129,
-    originalPrice: 159,
-    image: "https://picsum.photos/300/400?random=2",
-    rating: 4.6,
-    reviews: 189,
-    brand: "DenimPro",
-    availability: "In Stock",
-    colors: ["Blue", "Black", "Gray"],
-    sizes: ["28", "30", "32", "34"],
-  },
-  {
-    id: 3,
-    title: "Summer Black Dress",
-    description: "Elegant black dress for evening events",
-    price: 199,
-    originalPrice: 249,
-    image: "https://picsum.photos/300/400?random=3",
-    rating: 4.9,
-    reviews: 156,
-    brand: "Elegance",
-    availability: "Limited Stock",
-    colors: ["Black", "Navy", "Red"],
-    sizes: ["XS", "S", "M", "L"],
-  },
-];
-
 export function ParallaxLanding({
   onSearch,
   searchResults,
@@ -143,7 +97,9 @@ export function ParallaxLanding({
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1.2, ease: "easeOut", delay: 0.2 }}
-              style={{ fontFamily: "'Dancing Script', 'Brush Script MT', cursive" }}
+              style={{
+                fontFamily: "'Dancing Script', 'Brush Script MT', cursive",
+              }}
             >
               Fashion
               <motion.span
@@ -152,7 +108,9 @@ export function ParallaxLanding({
                   backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
                 }}
                 transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                style={{ fontFamily: "'Dancing Script', 'Brush Script MT', cursive" }}
+                style={{
+                  fontFamily: "'Dancing Script', 'Brush Script MT', cursive",
+                }}
               >
                 {" "}
                 Universe
@@ -200,7 +158,7 @@ export function ParallaxLanding({
                   duration: 2,
                   repeat: Infinity,
                   ease: "easeInOut",
-                  repeatType: "reverse"
+                  repeatType: "reverse",
                 }}
                 className="flex flex-col items-center text-white/70 hover:text-white transition-colors"
               >
@@ -316,14 +274,14 @@ export function ParallaxLanding({
             viewport={{ once: true }}
           >
             <ProductGrid
-              products={hasSearched ? searchResults : dummyProducts}
+              products={hasSearched ? searchResults : []}
               loading={loading}
               error={error}
             />
           </motion.div>
         </div>
       </motion.section>
-      
+
       {/* Checkout Wardrobe Button */}
       <CheckoutWardrobeButton />
     </div>

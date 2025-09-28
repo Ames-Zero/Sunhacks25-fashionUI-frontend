@@ -8,6 +8,7 @@ export const searchService = {
       const response = await api.post('/search-products', {
         query: query.trim()
       });
+      console.log('api data', response.data);
       return response.data;
     } catch (error) {
       console.error('Search API error:', error);

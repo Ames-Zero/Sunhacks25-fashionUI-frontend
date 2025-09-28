@@ -3,7 +3,7 @@
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Star, ShoppingCart, Check, Heart } from "lucide-react";
+import { Star, ShoppingCart, Check, Heart, Sparkles } from "lucide-react";
 import { useState, memo } from "react";
 import { useWardrobe } from "@/contexts/WardrobeContext";
 import { motion } from "framer-motion";
@@ -371,6 +371,76 @@ export const ProductGrid = memo(function ProductGrid({
           Try Again
         </Button>
       </div>
+    );
+  }
+
+  // No products found
+  if (!products || products.length === 0) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="text-center py-16"
+      >
+        <div className="bg-gradient-to-br from-indigo-50 to-purple-100 rounded-2xl p-12 max-w-2xl mx-auto border border-indigo-200 shadow-lg">
+          <motion.div
+            initial={{ scale: 0.8 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="mb-6"
+          >
+            <div className="w-24 h-24 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-xl">
+              <ShoppingCart className="h-12 w-12 text-white" />
+            </div>
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            <h3 className="text-2xl font-bold text-gray-800 mb-4">
+              No Products Found
+            </h3>
+            <p className="text-gray-600 text-lg mb-6 leading-relaxed">
+              We couldn&apos;t find any products matching your search. Try adjusting your search terms or browse with different keywords.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button
+                variant="default"
+                onClick={() => {
+                  const searchInput = document.querySelector('input[type="text"]');
+                  if (searchInput) {
+                    searchInput.value = '';
+                    searchInput.focus();
+                    searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }
+                }}
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+              >
+                <Sparkles className="mr-2 h-4 w-4" />
+                Start New Search
+              </Button>
+              
+              <Button
+                variant="outline"
+                onClick={() => {
+                  const searchInput = document.querySelector('input[type="text"]');
+                  if (searchInput) {
+                    searchInput.focus();
+                    searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }
+                }}
+                className="border-indigo-300 text-indigo-700 hover:bg-indigo-50"
+              >
+                Try Different Search
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      </motion.div>
     );
   }
 
