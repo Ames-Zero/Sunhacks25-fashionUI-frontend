@@ -14,32 +14,7 @@ export const useWardrobe = () => {
 
 export const WardrobeProvider = ({ children }) => {
   const [wardrobeItems, setWardrobeItems] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Load wardrobe items from localStorage on mount
-  useEffect(() => {
-    try {
-      const savedItems = localStorage.getItem('wardrobe');
-      if (savedItems) {
-        setWardrobeItems(JSON.parse(savedItems));
-      }
-    } catch (error) {
-      console.error('Error loading wardrobe items:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  // Save to localStorage whenever wardrobeItems changes
-  useEffect(() => {
-    if (!isLoading) {
-      try {
-        localStorage.setItem('wardrobe', JSON.stringify(wardrobeItems));
-      } catch (error) {
-        console.error('Error saving wardrobe items:', error);
-      }
-    }
-  }, [wardrobeItems, isLoading]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const addToWardrobe = (product) => {
     setWardrobeItems(prev => {

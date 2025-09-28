@@ -1,31 +1,18 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ThreeBackground } from '@/components/ThreeBackground';
 import { WardrobeGrid } from '@/components/WardrobeCard';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Sparkles, Heart, Trash2, Filter } from 'lucide-react';
+import { useWardrobe } from '@/contexts/WardrobeContext';
 import Link from 'next/link';
 
 export default function WardrobePage() {
-  const [wardrobeItems, setWardrobeItems] = useState([]);
+  const { wardrobeItems, removeFromWardrobe } = useWardrobe();
   const [filter, setFilter] = useState('all');
-
-  useEffect(() => {
-    // Load wardrobe items from localStorage
-    const savedItems = localStorage.getItem('wardrobe');
-    if (savedItems) {
-      setWardrobeItems(JSON.parse(savedItems));
-    }
-  }, []);
-
-  const removeFromWardrobe = (productId) => {
-    const updatedItems = wardrobeItems.filter(item => item.id !== productId);
-    setWardrobeItems(updatedItems);
-    localStorage.setItem('wardrobe', JSON.stringify(updatedItems));
-  };
 
   const getFilteredItems = () => {
     if (filter === 'all') return wardrobeItems;
