@@ -66,7 +66,7 @@ export default function FashionAdvisor() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1, delay: 0.2 }}
               >
-                Fashion Universe
+                Friends With Wardrobe
                 <motion.span 
                   className="ml-3"
                   animate={{ 

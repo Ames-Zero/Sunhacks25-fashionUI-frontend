@@ -106,7 +106,7 @@ export function ParallaxLanding({
                 fontFamily: "'Dancing Script', 'Brush Script MT', cursive",
               }}
             >
-              Fashion
+              Friends With
               <motion.span
                 className="text-6xl md:text-[120px] font-bold text-white mb-6"
                 animate={{
@@ -118,7 +118,7 @@ export function ParallaxLanding({
                 }}
               >
                 {" "}
-                Universe
+                Wardrobe
               </motion.span>
             </motion.h1>
 
@@ -194,7 +194,7 @@ export function ParallaxLanding({
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Why Choose Fashion Universe?
+              Why Choose Friends With Wardrobe ?
             </h2>
           </motion.div>
 
