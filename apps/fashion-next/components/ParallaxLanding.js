@@ -77,7 +77,7 @@ export function ParallaxLanding({
                 loading={loading}
                 className="max-w-4xl mx-auto"
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(value) => setQuery(value)}
               />
             </div>
           </motion.div>
