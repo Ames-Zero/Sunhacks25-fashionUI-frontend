@@ -31,18 +31,33 @@ export default function Home() {
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold mb-4">Fashion Search</h1>
         <p className="text-muted-foreground text-lg">
-          Discover the latest fashion trends and find your perfect style
+          Discover amazing fashion items and build your personal wardrobe collection
         </p>
       </div>
 
       {/* Search Section */}
       <div className="mb-8">
         <SearchBar
-          placeholder="Search for fashion items (e.g., white shirt, blue jeans, red dress)"
           onSearch={handleSearch}
           loading={loading}
-          className="max-w-2xl mx-auto"
+          className="max-w-4xl mx-auto"
         />
+        
+        {query && (
+          <div className="text-center mt-4">
+            <p className="text-sm text-muted-foreground">
+              {loading ? 'Searching...' : `Found ${results.length} results for "${query}"`}
+              {query && !loading && (
+                <button 
+                  onClick={() => handleSearch('')}
+                  className="ml-2 text-primary hover:underline"
+                >
+                  Clear search
+                </button>
+              )}
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Results Section */}
@@ -61,40 +76,39 @@ export default function Home() {
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
           <Card>
             <CardHeader>
-              <CardTitle>🔍 Smart Search</CardTitle>
-              <CardDescription>AI-powered fashion search</CardDescription>
+              <CardTitle>🔍 Easy Search</CardTitle>
+              <CardDescription>Find what you want quickly</CardDescription>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Search using natural language like "white cotton shirt" or "blue
-                denim jeans" and find exactly what you're looking for.
+                {`Simply type what you're looking for like "white shirt" or "blue
+                jeans" and discover amazing fashion items.`}
               </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>⚡ Real-time Results</CardTitle>
-              <CardDescription>Instant search with debouncing</CardDescription>
+              <CardTitle>⚡ Instant Results</CardTitle>
+              <CardDescription>See products as you search</CardDescription>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Get instant results as you type with smart debouncing that
-                reduces API calls while providing fast search experience.
+                Get results instantly as you type and browse through our
+                collection effortlessly to find your perfect match.
               </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>🎨 Beautiful Cards</CardTitle>
-              <CardDescription>Rich product information</CardDescription>
+              <CardTitle>👕 Build Your Wardrobe</CardTitle>
+              <CardDescription>Save items you love</CardDescription>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Each product is displayed in a beautiful card with images,
-                prices, ratings, and detailed information to help you make the
-                right choice.
+                Browse products with detailed info and add your favorites to your
+                personal wardrobe collection for easy access anytime.
               </p>
             </CardContent>
           </Card>
@@ -104,16 +118,17 @@ export default function Home() {
       {/* Popular Searches */}
       {!query && (
         <div className="text-center">
-          <h3 className="text-lg font-semibold mb-4">Popular Searches</h3>
+          <h3 className="text-lg font-semibold mb-4">Popular Combinations</h3>
           <div className="flex flex-wrap justify-center gap-2">
             {[
               "white shirt",
               "blue jeans",
               "black dress",
               "red hoodie",
-              "summer dress",
-              "winter coat",
-              "formal shirt",
+              "navy trousers",
+              "gray sweater",
+              "green jacket",
+              "pink blouse",
             ].map((searchTerm) => (
               <button
                 key={searchTerm}

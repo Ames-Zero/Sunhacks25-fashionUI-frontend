@@ -3,83 +3,131 @@
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, X, Loader2 } from 'lucide-react';
+import { Search, X, Loader2, Palette, Shirt } from 'lucide-react';
 
 export function SearchBar({ 
-  placeholder = "Search for fashion items (e.g., white shirt, blue jeans)", 
   onSearch, 
   loading = false,
   className = "" 
 }) {
-  const [query, setQuery] = useState('');
+  const [color, setColor] = useState('');
+  const [item, setItem] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (query.trim() && onSearch) {
-      onSearch(query.trim());
+    const searchQuery = buildSearchQuery(color, item);
+    if (searchQuery && onSearch) {
+      onSearch(searchQuery);
     }
   };
 
+  const buildSearchQuery = (colorValue, itemValue) => {
+    const parts = [];
+    if (colorValue.trim()) parts.push(colorValue.trim());
+    if (itemValue.trim()) parts.push(itemValue.trim());
+    return parts.join(' ');
+  };
+
   const handleClear = () => {
-    setQuery('');
+    setColor('');
+    setItem('');
     if (onSearch) {
       onSearch('');
     }
   };
 
-  const handleInputChange = (e) => {
+  const handleColorChange = (e) => {
     const value = e.target.value;
-    setQuery(value);
+    setColor(value);
     if (onSearch) {
-      onSearch(value);
+      const searchQuery = buildSearchQuery(value, item);
+      onSearch(searchQuery);
     }
   };
 
+  const handleItemChange = (e) => {
+    const value = e.target.value;
+    setItem(value);
+    if (onSearch) {
+      const searchQuery = buildSearchQuery(color, value);
+      onSearch(searchQuery);
+    }
+  };
+
+  const hasQuery = color.trim() || item.trim();
+
   return (
     <form onSubmit={handleSubmit} className={`relative ${className}`}>
-      <div className="relative flex items-center">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            type="text"
-            placeholder={placeholder}
-            value={query}
-            onChange={handleInputChange}
-            className="pl-10 pr-10 bg-gray-100 border-gray-200 focus:bg-gray-50 focus:border-gray-300 text-black"
-            disabled={loading}
-          />
-          {query && (
-            <button
-              type="button"
-              onClick={handleClear}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+      <div className="flex flex-col sm:flex-row gap-4 items-end">
+        {/* Color Input */}
+        <div className="flex-1">
+          <label htmlFor="color-input" className="block text-sm font-medium mb-2">
+            Color
+          </label>
+          <div className="relative">
+            <Palette className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              id="color-input"
+              type="text"
+              placeholder="e.g., blue, red, white"
+              value={color}
+              onChange={handleColorChange}
+              className="pl-10 bg-gray-100 border-gray-200 focus:bg-gray-50 focus:border-gray-300 text-black"
               disabled={loading}
-            >
-              {loading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <X className="h-4 w-4" />
-              )}
-            </button>
-          )}
+            />
+          </div>
         </div>
-        <Button 
-          type="submit" 
-          className="ml-2"
-          disabled={!query.trim() || loading}
-        >
-          {loading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Searching...
-            </>
-          ) : (
-            <>
-              <Search className="mr-2 h-4 w-4" />
-              Search
-            </>
+
+        {/* Item Input */}
+        <div className="flex-1">
+          <label htmlFor="item-input" className="block text-sm font-medium mb-2">
+            Item Type
+          </label>
+          <div className="relative">
+            <Shirt className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              id="item-input"
+              type="text"
+              placeholder="e.g., shirt, jeans, trousers"
+              value={item}
+              onChange={handleItemChange}
+              className="pl-10 bg-gray-100 border-gray-200 focus:bg-gray-50 focus:border-gray-300 text-black"
+              disabled={loading}
+            />
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex gap-2">
+          {hasQuery && (
+            <Button 
+              type="button"
+              variant="outline"
+              onClick={handleClear}
+              disabled={loading}
+              className="px-3"
+            >
+              <X className="h-4 w-4" />
+            </Button>
           )}
-        </Button>
+          
+          <Button 
+            type="submit" 
+            disabled={!hasQuery || loading}
+          >
+            {loading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Searching...
+              </>
+            ) : (
+              <>
+                <Search className="mr-2 h-4 w-4" />
+                Search
+              </>
+            )}
+          </Button>
+        </div>
       </div>
     </form>
   );
