@@ -129,7 +129,7 @@ export function ParallaxLanding({
       {/* Hero Section */}
       <motion.section
         style={{ y: heroY, opacity: heroOpacity }}
-        className="relative min-h-screen flex items-center justify-center text-center px-6"
+        className="relative min-h-screen flex items-center justify-center text-center px-6 will-change-transform"
       >
         <div className="max-w-4xl mx-auto">
           <motion.div
@@ -173,8 +173,8 @@ export function ParallaxLanding({
               style={{ y: searchY, scale: searchScale }}
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.8 }}
-              className="mb-12"
+              transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
+              className="mb-12 will-change-transform"
             >
               <div className="bg-blue-900/20 backdrop-blur-md rounded-2xl p-8 border border-blue-300/30">
                 <SearchBar
@@ -199,6 +199,7 @@ export function ParallaxLanding({
                   duration: 2,
                   repeat: Infinity,
                   ease: "easeInOut",
+                  repeatType: "reverse"
                 }}
                 className="flex flex-col items-center text-white/70 hover:text-white transition-colors"
               >

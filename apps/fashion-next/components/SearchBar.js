@@ -1,13 +1,44 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, X, Loader2, Palette, Shirt } from "lucide-react";
 
+// Custom debounce hook
+const useDebounce = (value, delay) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};
+
 export function SearchBar({ onSearch, loading = false, className = "" }) {
   const [color, setColor] = useState("");
   const [item, setItem] = useState("");
+  
+  // Debounce the search values
+  const debouncedColor = useDebounce(color, 300);
+  const debouncedItem = useDebounce(item, 300);
+
+  // Trigger search when debounced values change
+  useEffect(() => {
+    if (debouncedColor.trim() || debouncedItem.trim()) {
+      const searchQuery = buildSearchQuery(debouncedColor, debouncedItem);
+      if (searchQuery && onSearch) {
+        onSearch(searchQuery);
+      }
+    }
+  }, [debouncedColor, debouncedItem, onSearch]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -27,19 +58,13 @@ export function SearchBar({ onSearch, loading = false, className = "" }) {
   const handleColorChange = (e) => {
     const value = e.target.value;
     setColor(value);
-    if (onSearch) {
-      const searchQuery = buildSearchQuery(value, item);
-      onSearch(searchQuery);
-    }
+    // Removed real-time search for better performance
   };
 
   const handleItemChange = (e) => {
     const value = e.target.value;
     setItem(value);
-    if (onSearch) {
-      const searchQuery = buildSearchQuery(color, value);
-      onSearch(searchQuery);
-    }
+    // Removed real-time search for better performance
   };
 
   const hasQuery = color.trim() || item.trim();
@@ -63,7 +88,7 @@ export function SearchBar({ onSearch, loading = false, className = "" }) {
               placeholder="e.g., blue, red, white"
               value={color}
               onChange={handleColorChange}
-              className="pl-10 bg-gray-100 border-gray-200 focus:bg-gray-50 focus:border-gray-300 text-black"
+              className="pl-10 bg-gray-100 border-gray-200 focus:bg-gray-50 focus:border-gray-300 text-black transition-all duration-200"
             />
           </div>
         </div>
@@ -84,7 +109,7 @@ export function SearchBar({ onSearch, loading = false, className = "" }) {
               placeholder="e.g., shirt, jeans, trousers"
               value={item}
               onChange={handleItemChange}
-              className="pl-10 bg-gray-100 border-gray-200 focus:bg-gray-50 focus:border-gray-300 text-black"
+              className="pl-10 bg-gray-100 border-gray-200 focus:bg-gray-50 focus:border-gray-300 text-black transition-all duration-200"
             />
           </div>
         </div>

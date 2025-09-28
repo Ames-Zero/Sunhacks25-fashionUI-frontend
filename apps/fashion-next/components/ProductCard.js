@@ -4,14 +4,20 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Star, ShoppingCart } from "lucide-react";
-import { useState } from "react";
+import { useState, memo } from "react";
 import Image from "next/image";
 
-export function ProductCard({ product }) {
+export const ProductCard = memo(function ProductCard({ product }) {
   const [imageError, setImageError] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
 
   const handleImageError = () => {
     setImageError(true);
+    setImageLoading(false);
+  };
+
+  const handleImageLoad = () => {
+    setImageLoading(false);
   };
 
   // Handle both old and new data structures
@@ -26,7 +32,7 @@ export function ProductCard({ product }) {
   const productAttributes = product.attributes;
 
   return (
-    <Card className="group relative overflow-hidden hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white/95 via-indigo-50/80 to-purple-100/70 backdrop-blur-sm border-indigo-200/30 shadow-lg hover:shadow-indigo-200/25">
+    <Card className="group relative overflow-hidden hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white/95 via-indigo-50/80 to-purple-100/70 backdrop-blur-sm border-indigo-200/30 shadow-lg hover:shadow-indigo-200/25 will-change-transform">
       {/* Product Image */}
       <div
         className="relative overflow-hidden bg-gradient-to-br from-indigo-100 to-purple-100"
@@ -38,10 +44,13 @@ export function ProductCard({ product }) {
             alt={productName}
             fill
             sizes="(max-width: 768px) 100vw, 33vw"
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 will-change-transform"
             onError={handleImageError}
             style={{ objectFit: "cover" }}
             priority={false}
+            loading="lazy"
+            placeholder="blur"
+            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
           />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center">
@@ -191,10 +200,10 @@ export function ProductCard({ product }) {
     };
     return colorMap[colorName?.toLowerCase()] || "#9ca3af";
   }
-}
+});
 
 // Grid container for products
-export function ProductGrid({ products, loading, error }) {
+export const ProductGrid = memo(function ProductGrid({ products, loading, error }) {
   if (loading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -233,4 +242,4 @@ export function ProductGrid({ products, loading, error }) {
       ))}
     </div>
   );
-}
+});
