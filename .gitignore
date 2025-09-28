@@ -43,3 +43,4 @@ next-env.d.ts
 
 /apps/*/.turbo/
 .turbo/
+/apps/*/.DS_Store/
