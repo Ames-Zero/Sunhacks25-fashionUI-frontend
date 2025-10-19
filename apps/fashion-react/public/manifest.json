@@ -11,10 +11,13 @@
       "128": "vite.svg"
     }
   },
-  "permissions": ["storage", "activeTab"],
+  "permissions": ["storage", "activeTab", "tabs"],
   "icons": {
     "16": "vite.svg",
     "48": "vite.svg",
     "128": "vite.svg"
-  }
+  },
+  "host_permissions": [
+    "http://localhost:8000/*"
+  ]
 }
