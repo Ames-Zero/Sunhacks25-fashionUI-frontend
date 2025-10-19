@@ -106,14 +106,7 @@ export default function WardrobePage() {
                 </CardContent>
               </Card>
               
-              <Card className="bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200">
-                <CardContent className="p-4 text-center">
-                  <div className="text-2xl font-bold text-indigo-700">
-                    ${wardrobeItems.reduce((sum, item) => sum + (item.price || 0), 0).toFixed(0)}
-                  </div>
-                  <div className="text-sm text-gray-600">Total Value</div>
-                </CardContent>
-              </Card>
+              {/* Total Value field removed as requested */}
             </div>
           </div>
         </div>

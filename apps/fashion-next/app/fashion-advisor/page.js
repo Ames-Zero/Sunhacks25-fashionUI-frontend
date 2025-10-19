@@ -31,7 +31,9 @@ export default function FashionAdvisor() {
     setCurrentQuestion(question);
     
     try {
-      await getRecommendations(question);
+      const result = await getRecommendations(question);
+      console.log("Recommendations received:", result);
+      console.log("Suggested items structure:", result?.suggested_items);
       // Clear the input after successful submission
       setPrompt("");
     } catch (err) {
@@ -372,19 +374,19 @@ export default function FashionAdvisor() {
                         </div>
                         <CardHeader className="pb-2">
                           <CardTitle className="text-sm font-bold text-gray-800 line-clamp-2">
-                            {item.product_name}
+                            {item.product_name || 'Product Name Unavailable'}
                           </CardTitle>
                           <div className="flex items-center justify-between">
-                            <span className="text-xs text-gray-500 font-medium">{item.brand}</span>
+                            <span className="text-xs text-gray-500 font-medium">{item.brand || 'Brand N/A'}</span>
                             <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">
-                              {item.subcategory}
+                              {item.subcategory || 'Category N/A'}
                             </span>
                           </div>
                         </CardHeader>
                         <CardContent className="pt-0">
                           <div className="flex items-center justify-between mb-3">
                             <div className="text-xl font-bold text-green-600">
-                              ₹{item.price.toLocaleString()}
+                              {item.price ? `₹${item.price.toLocaleString()}` : 'Price not available'}
                             </div>
                             <div className="flex items-center gap-1">
                               <Star className="h-4 w-4 text-yellow-500 fill-current" />

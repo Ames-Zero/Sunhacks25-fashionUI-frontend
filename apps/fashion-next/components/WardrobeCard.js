@@ -140,10 +140,7 @@ export const WardrobeCard = memo(function WardrobeCard({ item, onRemove }) {
             </div>
           )}
 
-          {/* Price */}
-          <div className="flex items-center gap-2 mb-4">
-            <span className="font-bold text-2xl text-purple-700">${productPrice}</span>
-          </div>
+          {/* ...existing code... */}
 
           {/* Colors */}
           {productColors && (

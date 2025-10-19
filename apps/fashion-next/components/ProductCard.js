@@ -194,26 +194,7 @@ export const ProductCard = memo(function ProductCard({ product }) {
           </div>
         )}
 
-        {/* Price Section */}
-        <div className="bg-gradient-to-r from-indigo-50/80 to-purple-50/80 p-4 rounded-xl border border-indigo-100 shadow-sm">
-          <div className="flex items-baseline gap-3">
-            <span className="font-black text-3xl text-indigo-700">
-              ${productPrice}
-            </span>
-            {productOriginalPrice && productOriginalPrice > productPrice && (
-              <>
-                <span className="text-base text-gray-500 line-through font-medium">
-                  ${productOriginalPrice}
-                </span>
-                {productDiscount && (
-                  <span className="text-sm bg-gradient-to-r from-emerald-500 to-green-500 text-white px-3 py-1.5 rounded-full font-bold shadow-md">
-                    {productDiscount} OFF
-                  </span>
-                )}
-              </>
-            )}
-          </div>
-        </div>
+        {/* ...existing code... */}
 
         {/* Colors and Sizes */}
         <div className="grid grid-cols-1 gap-4">
