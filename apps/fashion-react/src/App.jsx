@@ -21,9 +21,9 @@ export default function App() {
       setLoading(true);
       setError('');
 
-      // Timeout controller for fetch
+      // Timeout controller for fetch - increased to 60s for image generation
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 20000); // 20s timeout
+      const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
       try {
         const res = await fetch('http://localhost:8000/generate-photo-and-data', {
           method: 'POST',
@@ -41,7 +41,12 @@ export default function App() {
         if (data?.image_public_url) setImageUrl(data.image_public_url);
         if (data?.metadata) setMetadata(data.metadata);
       } catch (e) {
-        setError(e?.message || 'Failed to generate image and data');
+        clearTimeout(timeoutId);
+        if (e.name === 'AbortError') {
+          setError('Request timed out. Please try again.');
+        } else {
+          setError(e?.message || 'Failed to generate image and data');
+        }
       } finally {
         setLoading(false);
       }
